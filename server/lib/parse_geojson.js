@@ -30,7 +30,7 @@ module.exports = function (entry) {
 	var result = {};
 	entry.properties.forEach(function (property) {
 		var values = properties[property.key];
-		if (!values) throw Error();
+		if (!values) throw Error('"'+property.key+'" does not exist');
 
 		delete properties[property.key];
 
@@ -82,7 +82,8 @@ module.exports = function (entry) {
 function parseGeometry(geometry) {
 	switch (geometry.type) {
 		case 'LineString': return { t:'l', c:diffEncoding(geometry.coordinates.map(parseCoordinate)) };
-		default: throw new Error();
+		case 'Point': return { t:'p', c:parseCoordinate(geometry.coordinates) };
+		default: throw new Error(geometry.type);
 	}
 }
 

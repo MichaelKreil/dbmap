@@ -7,14 +7,14 @@ var sources = [
 		filename: 'map/Streckennetz_WGS84.geojson',
 		properties: [
 			{key:'mifcode', ignore:true},
-			{key:'strecke_nr'},
-			{key:'richtung', parser:parseFloat},
-			{key:'laenge'},
-			{key:'von_km'},
-			{key:'bis_km'},
-			{key:'elektrifizierung'},
-			{key:'bahnnutzung'},
-			{key:'geschwindigkeit',
+			{key:'strecke_nr', info:true},
+			{key:'richtung', info:true, parser:parseFloat},
+			{key:'laenge', info:true},
+			{key:'von_km', info:true},
+			{key:'bis_km', info:true},
+			{key:'elektrifizierung', info:true},
+			{key:'bahnnutzung', info:true},
+			{key:'geschwindigkeit', info:true,
 				parser:function (value) {
 					switch(value) {
 						case 'bis 50 km/h': return 50;
@@ -30,8 +30,8 @@ var sources = [
 				},
 				default_value: 0
 			},
-			{key:'strecke_kurzn'},
-			{key:'gleisanzahl',
+			{key:'strecke_kurzn', info:true},
+			{key:'gleisanzahl', info:true,
 				parser:function (value) {
 					switch(value) {
 						case 'eingleisig': return 1;
@@ -41,8 +41,37 @@ var sources = [
 				}
 			},
 			{key:'bahnart'},
-			{key:'kmspru_typ_anf', default_value:'keine Angaben'},
-			{key:'kmspru_typ_end', default_value:'keine Angaben'}
+			{key:'kmspru_typ_anf', default_value:'keine Angabe'},
+			{key:'kmspru_typ_end', default_value:'keine Angabe'}
+		]
+	},
+	{
+		type: 'geojson',
+		name: 'tunnel',
+		title: 'Tunnel',
+		filename: 'map/Tunnel_WGS84.geojson',
+		properties: [
+			{key:'mifcode', ignore:true},
+			{key:'streckennummer', info:true, ignore:true},
+			{key:'von_km', ignore:true, info:true},
+			{key:'bis_km', ignore:true, info:true},
+			{key:'laenge', info:true},
+			{key:'bezeichnung', ignore:true, default_value:'keine Angabe', info:true},
+			{key:'olsp', default_value:'keine Angabe', info:true}
+		]
+	},
+	{
+		type: 'geojson',
+		name: 'betriebsstellen',
+		title: 'Betriebsstellen',
+		filename: 'map/Betriebsstelle_Lage_WGS84.geojson',
+		properties: [
+			{key:'mifcode', ignore:true},
+			{key:'streckennummer', info:true, ignore:true},
+			{key:'km', ignore:true, info:true},
+			{key:'bezeichnung', ignore:true, info:true},
+			{key:'art', info:true},
+			{key:'kuerzel', ignore:true, info:true}
 		]
 	}
 ]
@@ -56,6 +85,7 @@ var result = {};
 
 sources.forEach(function (entry) {
 	var _result = {};
+	console.log('Parse "'+entry.title+'"');
 	switch (entry.type) {
 		case 'geojson':
 			_result = parseGeoJSON(entry)

@@ -11,10 +11,12 @@ function Layers(map, layerWrapper) {
 			if (!geoGroups[layer.geo]) {
 				geoGroups[layer.geo] = {
 					filename: 'data/geo/'+layer.geo+'.json',
-					name:layer.nameGeo
+					name:layer.nameGeo,
+					layers:[]
 				};
 			}
 			layer.geo = geoGroups[layer.geo];
+			layer.geo.layers.push(layer);
 			layer.filename = 'data/property/'+layer.property+'.json';
 		})
 
@@ -62,7 +64,7 @@ function Layers(map, layerWrapper) {
 		if (layer.active) {
 			removeLayer(layer);
 		} else {
-			layers.forEach(removeLayer);
+			layer.geo.layers.forEach(removeLayer);
 			addLayer(layer);
 		}
 	}
@@ -120,20 +122,20 @@ function Layers(map, layerWrapper) {
 	}
 
 	function loadGeo(geoGroup, callback) {
-		if (geoGroup.data) return setTimeout(finish,0);
+		if (geoGroup.data) return finish();
 		$.getJSON(geoGroup.filename, function (result) {
 			geoGroup.data = result;
 			finish();
 		})
 		function finish() {
 			geoGroup.badge.html('&#x2713;');
-			callback();
+			setTimeout(callback,0);
 		}
 	}
 	
 	
 	function loadLayer(layer, callback) {
-		if (layer.data) return setTimeout(finish,0);
+		if (layer.data) return finish();
 		$.getJSON(layer.filename, function (data) {
 			var colorScheme = getColorScheme(data);
 			layer.colorScheme = colorScheme;
@@ -147,7 +149,7 @@ function Layers(map, layerWrapper) {
 		})
 		function finish() {
 			layer.badge.html('&#x2713;');
-			callback();
+			setTimeout(callback,0);
 		}
 	}
 
@@ -157,7 +159,7 @@ function Layers(map, layerWrapper) {
 function getColorScheme(data) {
 	var type = typeof data.values[0];
 	var useDefault = false;
-	var defaultColor = '#aaa';
+	var defaultColor = '#444';
 	var legend = [];
 
 	switch (type) {
