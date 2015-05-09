@@ -9,10 +9,12 @@ function Layers(map, layerWrapper) {
 			if (!geoGroups[layer.geo]) {
 				geoGroups[layer.geo] = {
 					filename: 'data/geo/'+layer.geo+'.json',
-					name:layer.nameGeo
+					name:layer.nameGeo,
+					layers:[]
 				};
 			}
 			layer.geo = geoGroups[layer.geo];
+			layer.geo.layers.push(layer);
 			layer.filename = 'data/property/'+layer.property+'.json';
 		})
 
@@ -26,7 +28,7 @@ function Layers(map, layerWrapper) {
 		if (layer.active) {
 			removeLayer(layer);
 		} else {
-			layers.forEach(removeLayer);
+			layer.geo.layers.forEach(removeLayer);
 			addLayer(layer);
 		}
 	}
