@@ -42,39 +42,42 @@ function Layers(map, layerWrapper) {
 	/**
 	 * 
 	 */
-	function drawColorScheme(colorScheme) {
+	function drawColorScheme(colorScheme, myName, id) {
 		if(colorScheme === undefined) {
-			$(".legend").hide();
 			return;
 		}
-		if(colorScheme.legend.length > 20) {
+		if(colorScheme.legend.length > 40) {
 			return;
 		}
 		$(".legend").show();
+		var html = '';
+		html += '<div id="legend-' + id + '"><h4>' + myName + '</h4>';
 		for (var i = 0; i < colorScheme.legend.length; i++) {
-		window.legendDiv.innerHTML +=
+			html +=
 	    	'<div><i style="background:' + colorScheme.legend[i].color + '"></i> ' +
 			colorScheme.legend[i].label + '</div>';
 		}
+		html += '</div>';
+		window.legendDiv.innerHTML += html;
     }
 		
 	
 	function showLegend(layer) {
 		var myLayer = layer;
+		console.log(myLayer);
 		if(window.legend === undefined) {
 			window.legend = L.control({position: 'bottomright'});
 			
 			window.legend.onAdd = function (map) {
 				window.legendDiv = L.DomUtil.create('div', 'info legend');
 			    
-				drawColorScheme(myLayer.colorScheme);
+				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' ' + myLayer.nameProp, myLayer.nameProp);
 			    return window.legendDiv;
 			};
 			window.legend.addTo(map);
 		}
 		else {
-			window.legendDiv.innerHTML = '';
-			drawColorScheme(myLayer.colorScheme);
+			drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' ' + myLayer.nameProp, myLayer.nameProp);
 		}
 		
 	}
@@ -110,6 +113,7 @@ function Layers(map, layerWrapper) {
 	}
 
 	function removeLayer(layer) {
+		$('#legend-' + layer.nameProp).remove();
 		if (layer.node) layer.node.removeClass('active');
 		layer.active = false;
 		if (layer.canvas) {

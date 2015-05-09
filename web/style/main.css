@@ -96,10 +96,11 @@ html, body{
 .legend {
 	display: none;
 }
-.legend div {
+
+.legend div div {
 	height: 20px;
 }
-.legend div i {
+.legend div div i {
   width: 18px;
   height: 18px;
   float: left;
