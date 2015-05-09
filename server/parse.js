@@ -1,20 +1,6 @@
 
 var sources = [
-	/*
 	{
-		type: 'geojson',
-		name: 'betriebsstellen',
-		title: 'Betriebsstellen',
-		filename: 'map/Betriebsstelle_Lage_WGS84.geojson',
-		properties: [
-			{key:'mifcode', ignore:true},
-			{key:'streckennummer', info:true, ignore:true},
-			{key:'km', ignore:true, info:true},
-			{key:'bezeichnung', ignore:true, info:true},
-			{key:'art', info:true},
-			{key:'kuerzel', ignore:true, info:true}
-		]
-	},{
 		type: 'geojson',
 		name: 'streckennetz',
 		title: 'Streckennetz',
@@ -58,7 +44,7 @@ var sources = [
 			{key:'kmspru_typ_anf', default_value:'keine Angabe'},
 			{key:'kmspru_typ_end', default_value:'keine Angabe'}
 		]
-	},*/
+	},
 	{
 		type: 'geojson',
 		name: 'tunnel',
@@ -73,6 +59,20 @@ var sources = [
 			{key:'bezeichnung', ignore:true, default_value:'keine Angabe', info:true},
 			{key:'olsp', default_value:'keine Angabe', info:true}
 		]
+	},
+	{
+		type: 'geojson',
+		name: 'betriebsstellen',
+		title: 'Betriebsstellen',
+		filename: 'map/Betriebsstelle_Lage_WGS84.geojson',
+		properties: [
+			{key:'mifcode', ignore:true},
+			{key:'streckennummer', info:true, ignore:true},
+			{key:'km', ignore:true, info:true},
+			{key:'bezeichnung', ignore:true, info:true},
+			{key:'art', info:true},
+			{key:'kuerzel', ignore:true, info:true}
+		]
 	}
 ]
 
@@ -85,6 +85,7 @@ var result = {};
 
 sources.forEach(function (entry) {
 	var _result = {};
+	console.log('Parse "'+entry.title+'"');
 	switch (entry.type) {
 		case 'geojson':
 			_result = parseGeoJSON(entry)
