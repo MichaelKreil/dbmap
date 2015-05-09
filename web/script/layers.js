@@ -230,7 +230,7 @@ function getColorScheme(data) {
 				return bezInterpolator(value).rgb();
 			}
 			
-			legend.push({value:min, label:min+' (min.)'});
+			legend.push({value:min, label:min.toFixed(0)+' (min.)'});
 			var numSteps = 5;
 			var stepSize = (max - min) / 5
 			for(var i=0; i < numSteps - 1; i++) {
@@ -238,10 +238,10 @@ function getColorScheme(data) {
 				if (stepSize > 2) {
 					value = Math.round(value);
 				}
-				legend.push({value: value, label: value});
+				legend.push({value: value, label: value.toFixed(0)});
 			}
 			
-			legend.push({value:max, label:max + ' (max.)'});
+			legend.push({value:max, label:max.toFixed(0) + ' (max.)'});
 
 		break;
 		
@@ -259,10 +259,10 @@ function getColorScheme(data) {
 			})
 
 			var count = Object.keys(keys).length-1;
-			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
+			var scale = chroma.scale(['red', 'yellow', 'green', 'blue']);
 			var getColor = function (value) {
 				if (value == data.default_value) return defaultColor;
-				return bezInterpolator(keys[value]/count).rgb();
+				return scale(keys[value]/count).rgb();
 			}
 		break;
 		default:
@@ -271,7 +271,7 @@ function getColorScheme(data) {
 
 	var cache = {};
 	function calc (value) {
-		if (!cache[value]) cache[value] = getColor(value);
+		if (!cache[value]) cache[value] = getColor(value).map(function (v) {return Math.round(v) });
 		return cache[value]
 	}
 	

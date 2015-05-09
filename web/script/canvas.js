@@ -119,11 +119,10 @@ function CanvasLayer (map, geoData, values) {
 							var y = (point[1] - y0)*scale;
 							if (index == 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
 						})
-						/*
 						var x = (obj.geometry[0][0] - x0)*scale;
 						var y = (obj.geometry[0][1] - y0)*scale;
-						ctx.lineTo(x,y)*/
-						ctx.fillStyle = 'rgba('+values[index].color.join(',')+',0.3)';
+						ctx.lineTo(x,y)
+						ctx.fillStyle = 'rgba('+values[index].color.join(',')+',0.5)';
 						ctx.fill();
 					break;
 					case 'point':

@@ -34,8 +34,8 @@ var sources = [
 			{key:'gleisanzahl', info:true,
 				parser:function (value) {
 					switch(value) {
-						case 'eingleisig': return 1;
-						case 'zweigleisig': return 2;
+						case  'eingleisig': return '1';
+						case 'zweigleisig': return '2';
 						default: throw Error();
 					}
 				}
