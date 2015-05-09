@@ -26,6 +26,7 @@ function Layers(map, layerWrapper) {
 		if (layer.active) {
 			removeLayer(layer);
 		} else {
+			layers.forEach(removeLayer);
 			addLayer(layer);
 		}
 	}
@@ -38,13 +39,15 @@ function Layers(map, layerWrapper) {
 		loadGeo(layer.geo, function () {
 			loadLayer(layer, function () {
 				layer.canvas = new CanvasLayer(map, layer.geo.data, layer.data);
+				map.addLayer(layer.canvas.layer);
 			})
 		})
 	}
 
 	function removeLayer(layer) {
-		layer.node.removeClass('active');
+		if (layer.node) layer.node.removeClass('active');
 		layer.active = false;
+		if (layer.canvas) map.removeLayer(layer.canvas.layer);
 	}
 
 	function drawLayerList() {
