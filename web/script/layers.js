@@ -1,6 +1,8 @@
 function Layers(map, layerWrapper) {
 	var me = {};
 	var layers, geoGroups;
+	var legend;
+
 
 	me.setData = function(data) {
 		layers = data;
@@ -36,6 +38,40 @@ function Layers(map, layerWrapper) {
 		drawLayerList();
 		addLayer(geoGroups[0].layers[0]);
 	}
+	
+	function showLegend(layer) {
+		var myLayer = layer;
+		if(window.legend === undefined) {
+			window.legend = L.control({position: 'bottomright'});
+			
+			window.legend.onAdd = function (map) {
+				console.log(myLayer);
+				window.legendDiv = L.DomUtil.create('div', 'info legend');
+			    // loop through our density intervals and generate a label with a colored square for each interval
+			    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
+			        window.legendDiv.innerHTML +=
+			            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
+			            myLayer.colorScheme.legend[i].label + '</div>';
+			    }
+
+			    return window.legendDiv;
+			};
+			
+			window.legend.addTo(map);
+			
+		}
+		else {
+			window.legendDiv.innerHTML = '';
+	    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
+	        window.legendDiv.innerHTML +=
+	            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
+	            myLayer.colorScheme.legend[i].label + '</div>';
+	    }
+			
+		}
+		
+	}
+	
 
 	function toggleLayer(layer) {
 		if (layer.active) {
@@ -55,13 +91,13 @@ function Layers(map, layerWrapper) {
 			loadLayer(layer, function () {
 				layer.canvas = new CanvasLayer(map, layer.geo.data, layer.data);
 				map.addLayer(layer.canvas.layer);
-				//for (var i = layers.length-1; i >= 0; i--) {
-				for (var i = 0; i < layers.length; i++) {
-					layer = layers[i];
+
+				layers.forEach(function (layer) {
 					if (layer.canvas && layer.canvas.layer) {
 						layer.canvas.layer.bringToFront();
 					}
-				}
+				})
+				showLegend(layer);
 			})
 		})
 	}
@@ -117,7 +153,8 @@ function Layers(map, layerWrapper) {
 			setTimeout(callback,0);
 		}
 	}
-
+	
+	
 	function loadLayer(layer, callback) {
 		if (layer.data) return finish();
 
@@ -128,6 +165,7 @@ function Layers(map, layerWrapper) {
 
 		$.getJSON(layer.filename, function (data) {
 			var colorScheme = getColorScheme(data);
+			layer.colorScheme = colorScheme;
 			layer.data = data.values.map(function (value) {
 				return {
 					value:value,
