@@ -93,7 +93,9 @@ html, body{
     margin: 0 0 5px;
     color: #777;
 }
-
+.legend {
+	display: none;
+}
 .legend div {
 	height: 20px;
 }

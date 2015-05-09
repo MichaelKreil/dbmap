@@ -43,6 +43,11 @@ function Layers(map, layerWrapper) {
 	 * 
 	 */
 	function drawColorScheme(colorScheme) {
+		if(colorScheme === undefined) {
+			$(".legend").hide();
+			return;
+		}
+		$(".legend").show();
 		for (var i = 0; i < colorScheme.legend.length; i++) {
 		window.legendDiv.innerHTML +=
 	    	'<div><i style="background:' + colorScheme.legend[i].color + '"></i> ' +
