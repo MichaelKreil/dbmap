@@ -1,5 +1,6 @@
 
 var sources = [
+	/*
 	{
 		type: 'geojson',
 		name: 'betriebsstellen',
@@ -13,8 +14,7 @@ var sources = [
 			{key:'art', info:true},
 			{key:'kuerzel', ignore:true, info:true}
 		]
-	}
-	/*{
+	},{
 		type: 'geojson',
 		name: 'streckennetz',
 		title: 'Streckennetz',
@@ -55,10 +55,25 @@ var sources = [
 				}
 			},
 			{key:'bahnart'},
-			{key:'kmspru_typ_anf', default_value:'keine Angaben'},
-			{key:'kmspru_typ_end', default_value:'keine Angaben'}
+			{key:'kmspru_typ_anf', default_value:'keine Angabe'},
+			{key:'kmspru_typ_end', default_value:'keine Angabe'}
 		]
-	}*/
+	},*/
+	{
+		type: 'geojson',
+		name: 'tunnel',
+		title: 'Tunnel',
+		filename: 'map/Tunnel_WGS84.geojson',
+		properties: [
+			{key:'mifcode', ignore:true},
+			{key:'streckennummer', info:true, ignore:true},
+			{key:'von_km', ignore:true, info:true},
+			{key:'bis_km', ignore:true, info:true},
+			{key:'laenge', info:true},
+			{key:'bezeichnung', ignore:true, default_value:'keine Angabe', info:true},
+			{key:'olsp', default_value:'keine Angabe', info:true}
+		]
+	}
 ]
 
 var fs = require('fs');

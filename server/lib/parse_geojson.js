@@ -30,7 +30,7 @@ module.exports = function (entry) {
 	var result = {};
 	entry.properties.forEach(function (property) {
 		var values = properties[property.key];
-		if (!values) throw Error();
+		if (!values) throw Error('"'+property.key+'" does not exist');
 
 		delete properties[property.key];
 
