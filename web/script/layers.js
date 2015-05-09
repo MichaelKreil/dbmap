@@ -82,7 +82,7 @@ function Layers(map, layerWrapper) {
 	}
 
 	function loadGeo(geoGroup, callback) {
-		if (geoGroup.data) return finish();
+		if (geoGroup.data) return setTimeout(finish,0);
 		$.getJSON(geoGroup.filename, function (result) {
 			geoGroup.data = result;
 			finish();
@@ -94,7 +94,7 @@ function Layers(map, layerWrapper) {
 	}
 
 	function loadLayer(layer, callback) {
-		if (layer.data) return finish();
+		if (layer.data) return setTimeout(finish,0);
 		$.getJSON(layer.filename, function (values) {
 			var calcColor = getColorScheme(values);
 			layer.data = values.map(function (value) {
@@ -129,6 +129,15 @@ function getColorScheme(values) {
 			return function (value) {
 				value = (value-min)/a;
 				return bezInterpolator(value).hex();
+			}
+		case 'string':
+			var keys = {};
+			values.forEach(function (value) { keys[value] = true; })
+			Object.keys(keys).forEach(function (key, index) {keys[key] = index });
+			var count = Object.keys(keys).length-1;;
+			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
+			return function (value) {
+				return bezInterpolator(keys[value]/count).hex();
 			}
 		default:
 			throw new Error('Unknown type "'+type+'"');

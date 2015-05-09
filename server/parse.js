@@ -17,7 +17,6 @@ var sources = [
 			{key:'geschwindigkeit',
 				parser:function (value) {
 					switch(value) {
-						case null: return 0;
 						case 'bis 50 km/h': return 50;
 						case 'ab 50 bis 100 km/h': return 100;
 						case 'ab 100 bis 120 km/h': return 120;
@@ -28,7 +27,8 @@ var sources = [
 						case 'ab 280 bis 300 km/h': return 300;
 						default: throw Error();
 					}
-				}
+				},
+				default_value: 0
 			},
 			{key:'strecke_kurzn'},
 			{key:'gleisanzahl',
@@ -41,8 +41,8 @@ var sources = [
 				}
 			},
 			{key:'bahnart'},
-			{key:'kmspru_typ_anf'},
-			{key:'kmspru_typ_end'}
+			{key:'kmspru_typ_anf', default_value:'keine Angaben'},
+			{key:'kmspru_typ_end', default_value:'keine Angaben'}
 		]
 	}
 ]

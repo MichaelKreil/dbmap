@@ -36,9 +36,21 @@ module.exports = function (entry) {
 
 		if (property.ignore) return;
 
-		if (property.parser) values = values.map(function (value) {
-			if (value === undefined) return undefined;
-			return property.parser(value);
+		if (property.parser) {
+			values = values.map(function (value) {
+				if (value === undefined) return null;
+				if (value === null) return null;
+				return property.parser(value);
+			})
+		}
+
+		//console.log(values);
+		values = values.map(function (value) {
+			if (value === null) {
+				if (property.default_value === undefined) throw new Error('"'+property.key+'" needs a default_value')
+				return property.default_value;
+			}
+			return value;
 		})
 
 		var propfilename = entry.name+'_'+(property.name || property.key);
