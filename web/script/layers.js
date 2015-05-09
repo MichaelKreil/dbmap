@@ -5,13 +5,19 @@ function Layers(map, layerWrapper) {
 	me.setData = function(data) {
 		layers = data;
 		geoGroups = {};
+		var emptyLayers = [];
 		layers.forEach(function (layer) {
 			if (!geoGroups[layer.geo]) {
+				var emptyLayer = {geo:layer.geo,property:false,nameGeo:layer.nameGeo,nameProp:'-'};
+				emptyLayers.push(emptyLayer);
+
 				geoGroups[layer.geo] = {
 					filename: 'data/geo/'+layer.geo+'.json',
 					name:layer.nameGeo,
-					layers:[]
+					layers:[emptyLayer]
 				};
+
+				emptyLayer.geo = geoGroups[layer.geo];
 			}
 			layer.geo = geoGroups[layer.geo];
 			layer.geo.layers.push(layer);
@@ -19,9 +25,11 @@ function Layers(map, layerWrapper) {
 		})
 
 		geoGroups = Object.keys(geoGroups).map(function (key) { return geoGroups[key] });
+		emptyLayers.forEach(function (layer) { layers.unshift(layer) });
+		layers.forEach(function (layer, index) { layer.index = index });
 
 		drawLayerList();
-		addLayer(layers[0]);
+		addLayer(geoGroups[0].layers[0]);
 	}
 
 	function toggleLayer(layer) {
@@ -97,6 +105,12 @@ function Layers(map, layerWrapper) {
 
 	function loadLayer(layer, callback) {
 		if (layer.data) return finish();
+
+		if (!layer.property) {
+			layer.data = layer.geo.data.map(function (value) { return { color: '#666' } })
+			finish();
+		}
+
 		$.getJSON(layer.filename, function (data) {
 			var colorScheme = getColorScheme(data);
 			layer.data = data.values.map(function (value) {
