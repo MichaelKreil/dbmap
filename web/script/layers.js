@@ -55,8 +55,8 @@ function Layers(map, layerWrapper) {
 		for (var i = 0; i < colorScheme.legend.length; i++) {
 			var colorRgb = 'rgb(' + colorScheme.legend[i].color.join() + ')';
 			html +=
-	    	'<div><i style="background:' + colorRgb + '"></i> ' +
-			colorScheme.legend[i].label + '</div>';
+				'<div><i style="background:' + colorRgb + '"></i> ' +
+				colorScheme.legend[i].label + '</div>';
 		}
 		html += '</div>';
 		window.legendDiv.innerHTML += html;
@@ -72,7 +72,7 @@ function Layers(map, layerWrapper) {
 			window.map.doubleClickZoom.enable();
 			window.map.scrollWheelZoom.enable();
 		});
-		
+	
     }
 	
 	function showLegend(layer) {
@@ -85,6 +85,7 @@ function Layers(map, layerWrapper) {
 			    
 				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, myLayer.order);
 			    return window.legendDiv;
+			
 			};
 			window.legend.addTo(map);
 		}

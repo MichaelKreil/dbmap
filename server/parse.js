@@ -89,7 +89,24 @@ var sources = [
 			{key:'art', info:true},
 			{key:'kuerzel', ignore:true, info:true}
 		]
-	},/*
+	},
+	{
+		type: 'geojson',
+		name: 'twsg',
+		title: 'Wasserschutzgebiete',
+		filename: 'map/twsg.geojson',
+		properties: [
+			{key:"GEBIETNAME", ignore:true},
+			{key:"GEBIETSNR", ignore:true},
+			{key:"STATUS"},
+			{key:"RECHTSGRDL", ignore:true},
+			{key:"RBEHOERDE", ignore:true},
+			{key:"FESTSDATUM", ignore:true},
+			{key:"TBEHOERDE", ignore:true},
+			{key:"ERFGRDL"},
+			{key:"FLAECHE"}
+		]
+	}/*,
 	{
 		type: 'csv',
 		name: 'gleislagefehler_verwindung',
