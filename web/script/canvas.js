@@ -80,7 +80,7 @@ function CanvasLayer (map, geoData, values) {
 							var y = (point[1] - y0)*scale;
 							if (index == 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
 						})
-						ctx.lineWidth = 1;
+						ctx.lineWidth = 1.5;
 						ctx.strokeStyle = values[index].color;
 						ctx.stroke();
 					break;
