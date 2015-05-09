@@ -28,7 +28,7 @@ function Layers(map, layerWrapper) {
 		geoGroups = Object.keys(geoGroups).map(function (key) { return geoGroups[key] });
 		geoGroups.forEach(function (geoGroup, index1) {
 			geoGroup.layers.forEach(function (layer, index2) {
-				layer.order = index1*100 + index2/100;
+				layer.order = index1*10000 + index2;
 			})
 		});
 		layers.sort(function (a,b) {
@@ -234,14 +234,17 @@ function getColorScheme(data) {
 		case 'string':
 			var keys = {};
 			data.values.forEach(function (value) {
-				if (!keys[value]) {
-					keys[value] = true;
-					if (value != data.default_value) legend.push({ value:value, label:value })
-				} 
+				if (!keys[value]) keys[value] = true;
 				if (value == data.default_value) useDefault = true;
 			})
-			Object.keys(keys).forEach(function (key, index) {keys[key] = index });
-			var count = Object.keys(keys).length-1;;
+			var sort = Object.keys(keys).map(function(key) { return key });
+			sort.sort();
+			sort.forEach(function (key, index) {
+				keys[key] = index;
+				if (key != data.default_value) legend.push({ value:key, label:key })
+			})
+
+			var count = Object.keys(keys).length-1;
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
 			var getColor = function (value) {
 				if (value == data.default_value) return defaultColor;

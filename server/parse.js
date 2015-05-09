@@ -1,23 +1,5 @@
 
 var sources = [
-
-	{
-		type: 'geojson',
-		subtype: 'circle',
-		radiusField: 'dist',
-		name: 'cell',
-		title: 'Funknetz',
-		filename: 'map/out-cells.geojson',
-		properties: [
-			{key:'mcc', ignore:true, info:true, parser:parseFloat},
-			{key:'mnc', ignore:true, info:true, parser:parseFloat},
-			{key:'dist', info:true, parser:parseFloat},
-			{key:'range', info:true, parser:parseFloat},
-			{key:'rssi', info:true, parser:parseFloat},
-			{key:'cellid', info:true, ignore:true },
-		]
-	},
-	/*
 	{
 		type: 'geojson',
 		name: 'streckennetz',
@@ -80,6 +62,22 @@ var sources = [
 	},
 	{
 		type: 'geojson',
+		subtype: 'circle',
+		radiusField: 'dist',
+		name: 'cell',
+		title: 'Funknetz',
+		filename: 'map/out-cells.geojson',
+		properties: [
+			{key:'mcc', ignore:true, info:true },
+			{key:'mnc', info:true, parser:function(v) { return (' '+v).substr(v.length-1) }},
+			{key:'dist', info:true, parser:parseFloat},
+			{key:'range', info:true, parser:parseFloat},
+			{key:'rssi', info:true, parser:parseFloat},
+			{key:'cellid', info:true, ignore:true },
+		]
+	},
+	{
+		type: 'geojson',
 		name: 'betriebsstellen',
 		title: 'Betriebsstellen',
 		filename: 'map/Betriebsstelle_Lage_WGS84.geojson',
@@ -91,13 +89,41 @@ var sources = [
 			{key:'art', info:true},
 			{key:'kuerzel', ignore:true, info:true}
 		]
-	}
+	},/*
+	{
+		type: 'csv',
+		name: 'gleislagefehler_verwindung',
+		title: 'Gleislagefehler - Verwindung',
+		filename: 'table/IIS_Gleislagefehler_RB_Mitte_2014.accdb.ORE-Verwindung.csv',
+		properties: [
+			{key:'ID', info:true, ignore:true},
+			{key:'Str-Nr', info:true, parser:parseFloat },
+			{key:'Ri', info:true, ignore:true, parser:parseFloat },
+			{key:'Von km', ignore:true, info:true, parser:parseKmShit },
+			{key:'Bis km', ignore:true, info:true, parser:parseKmShit },
+			{key:'Länge (m)', info:true, parser:parseFloat },
+			{key:'ORE-Verw Railab/GMTZ/ICE-S', info:true, parser:parseFloat },
+			{key:'Datum', info:true, ignore:true },
+			{key:'Mfzg', info:true, ignore:true },
+			{key:'Technischer Platz', info:true, ignore:true },
+		],
+		match:{
+			type:'km',
+			map:'map/Streckennetz_WGS84.geojson',
+			fields: {
+				track:['strecke_nr','Str-Nr'],
+				start:['von_km','Von km'],
+				stop:['bis_km','Bis km']
+			}
+		}
+	}*/
 ]
 
 var fs = require('fs');
 var path = require('path');
 var c = require('./config.js');
 var parseGeoJSON = require('./lib/parse_geojson.js');
+var parseCSV = require('./lib/parse_csv.js');
 
 var result = {};
 
@@ -107,6 +133,9 @@ sources.forEach(function (entry) {
 	switch (entry.type) {
 		case 'geojson':
 			_result = parseGeoJSON(entry)
+		break;
+		case 'csv':
+			_result = parseCSV(entry)
 		break;
 		default:
 			throw new Error('Unknown type')
@@ -122,4 +151,9 @@ result = Object.keys(result).map(function (key) {
 
 fs.writeFileSync(path.resolve(c.data_folder, 'data.json'), JSON.stringify(result), 'utf8')
 
+
+function parseKmShit(text) {
+	text = text.split('+');
+	return parseFloat(text[0])+parseFloat(text[1])/1000;
+}
 
