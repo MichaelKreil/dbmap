@@ -1,23 +1,5 @@
 
 var sources = [
-
-	{
-		type: 'geojson',
-		subtype: 'circle',
-		radiusField: 'dist',
-		name: 'cell',
-		title: 'Funknetz',
-		filename: 'map/out-cells.geojson',
-		properties: [
-			{key:'mcc', ignore:true, info:true, parser:parseFloat},
-			{key:'mnc', ignore:true, info:true, parser:parseFloat},
-			{key:'dist', info:true, parser:parseFloat},
-			{key:'range', info:true, parser:parseFloat},
-			{key:'rssi', info:true, parser:parseFloat},
-			{key:'cellid', info:true, ignore:true },
-		]
-	},
-	/*
 	{
 		type: 'geojson',
 		name: 'streckennetz',
@@ -76,6 +58,22 @@ var sources = [
 			{key:'laenge', info:true},
 			{key:'bezeichnung', ignore:true, default_value:'keine Angabe', info:true},
 			{key:'olsp', default_value:'keine Angabe', info:true}
+		]
+	},
+	{
+		type: 'geojson',
+		subtype: 'circle',
+		radiusField: 'dist',
+		name: 'cell',
+		title: 'Funknetz',
+		filename: 'map/out-cells.geojson',
+		properties: [
+			{key:'mcc', ignore:true, info:true },
+			{key:'mnc', info:true, parser:function(v) { return (' '+v).substr(v.length-1) }},
+			{key:'dist', info:true, parser:parseFloat},
+			{key:'range', info:true, parser:parseFloat},
+			{key:'rssi', info:true, parser:parseFloat},
+			{key:'cellid', info:true, ignore:true },
 		]
 	},
 	{
