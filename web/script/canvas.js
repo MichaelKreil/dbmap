@@ -72,15 +72,16 @@ function CanvasLayer (map, geoData, values) {
 		var y0 = tilePoint.y * size/scale;
 		var x1 = x0          + size/scale;
 		var y1 = y0          + size/scale;
+		var pad = 5/scale;
 
 		function drawTile () {
 			ctx.clearRect(0,0,size,size);
 
 			geoData.forEach(function (obj, index) {
-				if (obj.box.x0 > x1) return;
-				if (obj.box.x1 < x0) return;
-				if (obj.box.y0 > y1) return;
-				if (obj.box.y1 < y0) return;
+				if (obj.box.x0 > x1+pad) return;
+				if (obj.box.x1 < x0-pad) return;
+				if (obj.box.y0 > y1+pad) return;
+				if (obj.box.y1 < y0-pad) return;
 
 				switch (obj.type) {
 					case 'line':
