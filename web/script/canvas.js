@@ -11,6 +11,11 @@ function CanvasLayer (map, geoData, values) {
 				entry.geometry = diffDecoding(entry.c).map(parseCoordinate);
 				entry.box = calcBoundingbox(entry.geometry);
 			break;
+			case 'p':
+				entry.type = 'point';
+				entry.geometry = parseCoordinate(entry.c);
+				entry.box = calcBoundingPoint(entry.geometry);
+			break;
 			default: throw new Error();
 		}
 	});
@@ -27,6 +32,11 @@ function CanvasLayer (map, geoData, values) {
 			if (y1 < point[1]) y1 = point[1];
 		})
 		return { x0:x0, y0:y0, x1:x1, y1:y1 }
+	}
+
+	function calcBoundingPoint(point) {
+		var x0 =  1e100;
+		return { x0:point[0], y0:point[1], x1:point[0], y1:point[1] }
 	}
 
 	function parseCoordinate(coord) {
@@ -83,6 +93,14 @@ function CanvasLayer (map, geoData, values) {
 						ctx.lineWidth = 1.5;
 						ctx.strokeStyle = values[index].color;
 						ctx.stroke();
+					break;
+					case 'point':
+						ctx.beginPath();
+						var x = (obj.geometry[0] - x0)*scale;
+						var y = (obj.geometry[1] - y0)*scale;
+						ctx.arc(x,y,2,0,2*Math.PI);
+						ctx.fillStyle = values[index].color;
+						ctx.fill();
 					break;
 				}
 			})
