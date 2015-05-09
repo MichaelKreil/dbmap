@@ -82,19 +82,19 @@ function Layers(map, layerWrapper) {
 	}
 
 	function loadGeo(geoGroup, callback) {
-		if (geoGroup.data) return setTimeout(finish,0);
+		if (geoGroup.data) return finish();
 		$.getJSON(geoGroup.filename, function (result) {
 			geoGroup.data = result;
 			finish();
 		})
 		function finish() {
 			geoGroup.badge.html('&#x2713;');
-			callback();
+			setTimeout(callback,0);
 		}
 	}
 
 	function loadLayer(layer, callback) {
-		if (layer.data) return setTimeout(finish,0);
+		if (layer.data) return finish();
 		$.getJSON(layer.filename, function (data) {
 			var colorScheme = getColorScheme(data);
 			layer.data = data.values.map(function (value) {
@@ -107,7 +107,7 @@ function Layers(map, layerWrapper) {
 		})
 		function finish() {
 			layer.badge.html('&#x2713;');
-			callback();
+			setTimeout(callback,0);
 		}
 	}
 
