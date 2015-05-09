@@ -47,6 +47,9 @@ function Layers(map, layerWrapper) {
 			$(".legend").hide();
 			return;
 		}
+		if(colorScheme.legend.length > 20) {
+			return;
+		}
 		$(".legend").show();
 		for (var i = 0; i < colorScheme.legend.length; i++) {
 		window.legendDiv.innerHTML +=
