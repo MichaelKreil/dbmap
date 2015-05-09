@@ -26,35 +26,34 @@ function Layers(map, layerWrapper) {
 		addLayer(layers[0]);
 	}
 	
+	/**
+	 * 
+	 */
+	function drawColorScheme(colorScheme) {
+		for (var i = 0; i < colorScheme.legend.length; i++) {
+		window.legendDiv.innerHTML +=
+	    	'<div><i style="background:' + colorScheme.legend[i].color + '"></i> ' +
+			colorScheme.legend[i].label + '</div>';
+		}
+    }
+		
+	
 	function showLegend(layer) {
 		var myLayer = layer;
 		if(window.legend === undefined) {
 			window.legend = L.control({position: 'bottomright'});
 			
 			window.legend.onAdd = function (map) {
-				console.log(myLayer);
 				window.legendDiv = L.DomUtil.create('div', 'info legend');
-			    // loop through our density intervals and generate a label with a colored square for each interval
-			    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
-			        window.legendDiv.innerHTML +=
-			            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
-			            myLayer.colorScheme.legend[i].label + '</div>';
-			    }
-
+			    
+				drawColorScheme(myLayer.colorScheme);
 			    return window.legendDiv;
 			};
-			
 			window.legend.addTo(map);
-			
 		}
 		else {
 			window.legendDiv.innerHTML = '';
-	    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
-	        window.legendDiv.innerHTML +=
-	            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
-	            myLayer.colorScheme.legend[i].label + '</div>';
-	    }
-			
+			drawColorScheme(myLayer.colorScheme);
 		}
 		
 	}
@@ -179,17 +178,21 @@ function getColorScheme(data) {
 				return bezInterpolator(value).hex();
 			}
 			
-			legend = [{value:min, label:min+' (min.)'}];
+			legend.push({value:min, label:min+' (min.)'});
 			var numSteps = 5;
 			var stepSize = (max - min) / 5
 			for(var i=0; i < numSteps - 1; i++) {
 				var value = min + (stepSize * (i+1));
+				if (stepSize > 2) {
+					value = Math.round(value);
+				}
 				legend.push({value: value, label: value});
 			}
 			
 			legend.push({value:max, label:max + ' (max.)'});
 
 		break;
+		
 		case 'string':
 			var keys = {};
 			data.values.forEach(function (value) {
