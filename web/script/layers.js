@@ -117,7 +117,7 @@ function Layers(map, layerWrapper) {
 function getColorScheme(data) {
 	var type = typeof data.values[0];
 	var useDefault = false;
-	var defaultColor = '#aaa';
+	var defaultColor = '#444';
 	var legend = [];
 
 	switch (type) {
