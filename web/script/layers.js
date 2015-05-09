@@ -55,12 +55,12 @@ function Layers(map, layerWrapper) {
 		for (var i = 0; i < colorScheme.legend.length; i++) {
 			var colorRgb = 'rgb(' + colorScheme.legend[i].color.join() + ')';
 			html +=
-	    	'<div><i style="background:' + colorRgb + '"></i> ' +
-			colorScheme.legend[i].label + '</div>';
+				'<div><i style="background:' + colorRgb + '"></i> ' +
+				colorScheme.legend[i].label + '</div>';
 		}
 		html += '</div>';
 		window.legendDiv.innerHTML += html;
-    }
+	}
 	
 	function makeId(strIn) {
 		return strIn.replace(/[^\x00-\x7F]/g, "").split(' ')[0];
@@ -74,9 +74,9 @@ function Layers(map, layerWrapper) {
 			
 			window.legend.onAdd = function (map) {
 				window.legendDiv = L.DomUtil.create('div', 'info legend');
-			    
+			
 				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, makeId(myLayer.nameProp));
-			    return window.legendDiv;
+				return window.legendDiv;
 			};
 			window.legend.addTo(map);
 		}
