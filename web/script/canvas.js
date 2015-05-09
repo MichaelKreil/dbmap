@@ -16,6 +16,15 @@ function CanvasLayer (map, geoData, values) {
 				entry.geometry = parseCoordinate(entry.c);
 				entry.box = calcBoundingPoint(entry.geometry);
 			break;
+			case 'c':
+				entry.type = 'circle';
+				entry.geometry = parseCoordinate(entry.c);
+				var radius = entry.c[2];
+				radius = 360*radius/40074000;
+				radius *= 0.017453292519943295*0.5/Math.PI;
+				entry.geometry.push(radius);
+				entry.box = calcBoundingCircle(entry.geometry, radius);
+			break;
 			default: throw new Error();
 		}
 	});
@@ -35,8 +44,11 @@ function CanvasLayer (map, geoData, values) {
 	}
 
 	function calcBoundingPoint(point) {
-		var x0 =  1e100;
 		return { x0:point[0], y0:point[1], x1:point[0], y1:point[1] }
+	}
+
+	function calcBoundingCircle(point, radius) {
+		return { x0:point[0]-radius, y0:point[1]-radius, x1:point[0]+radius, y1:point[1]+radius }
 	}
 
 	function parseCoordinate(coord) {
@@ -92,7 +104,7 @@ function CanvasLayer (map, geoData, values) {
 							if (index == 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
 						})
 						ctx.lineWidth = 1.5;
-						ctx.strokeStyle = values[index].color;
+						ctx.strokeStyle = 'rgb('+values[index].color.join(',')+')';
 						ctx.stroke();
 					break;
 					case 'point':
@@ -100,8 +112,20 @@ function CanvasLayer (map, geoData, values) {
 						var x = (obj.geometry[0] - x0)*scale;
 						var y = (obj.geometry[1] - y0)*scale;
 						ctx.arc(x,y,2,0,2*Math.PI);
-						ctx.fillStyle = values[index].color;
+						ctx.fillStyle = 'rgb('+values[index].color.join(',')+')';
 						ctx.fill();
+					break;
+					case 'circle':
+						ctx.beginPath();
+						var r = obj.geometry[2]*scale;
+						var x = (obj.geometry[0] - x0)*scale;
+						var y = (obj.geometry[1] - y0)*scale;
+						ctx.arc(x,y,r,0,2*Math.PI);
+						ctx.fillStyle = 'rgba('+values[index].color.join(',')+',0.3)';
+						ctx.fill();
+						ctx.lineWidth = 0.5;
+						ctx.strokeStyle = 'rgb('+values[index].color.join(',')+')';
+						ctx.stroke();
 					break;
 				}
 			})

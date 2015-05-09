@@ -169,7 +169,7 @@ function Layers(map, layerWrapper) {
 		if (layer.data) return finish();
 
 		if (!layer.property) {
-			layer.data = layer.geo.data.map(function (value) { return { color: '#666' } })
+			layer.data = layer.geo.data.map(function (value) { return { color: [64,64,64] } })
 			finish();
 		}
 
@@ -196,7 +196,7 @@ function Layers(map, layerWrapper) {
 function getColorScheme(data) {
 	var type = typeof data.values[0];
 	var useDefault = false;
-	var defaultColor = '#444';
+	var defaultColor = [64,64,64];
 	var legend = [];
 
 	switch (type) {
@@ -213,7 +213,7 @@ function getColorScheme(data) {
 			var getColor = function (value) {
 				if (value == data.default_value) return defaultColor;
 				value = (value-min)/a;
-				return bezInterpolator(value).hex();
+				return bezInterpolator(value).rgb();
 			}
 			
 			legend.push({value:min, label:min+' (min.)'});
@@ -245,7 +245,7 @@ function getColorScheme(data) {
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
 			var getColor = function (value) {
 				if (value == data.default_value) return defaultColor;
-				return bezInterpolator(keys[value]/count).hex();
+				return bezInterpolator(keys[value]/count).rgb();
 			}
 		break;
 		default:

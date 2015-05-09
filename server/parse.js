@@ -1,5 +1,23 @@
 
 var sources = [
+
+	{
+		type: 'geojson',
+		subtype: 'circle',
+		radiusField: 'dist',
+		name: 'cell',
+		title: 'Funknetz',
+		filename: 'map/out-cells.geojson',
+		properties: [
+			{key:'mcc', ignore:true, info:true, parser:parseFloat},
+			{key:'mnc', ignore:true, info:true, parser:parseFloat},
+			{key:'dist', info:true, parser:parseFloat},
+			{key:'range', info:true, parser:parseFloat},
+			{key:'rssi', info:true, parser:parseFloat},
+			{key:'cellid', info:true, ignore:true },
+		]
+	},
+	/*
 	{
 		type: 'geojson',
 		name: 'streckennetz',
@@ -28,7 +46,7 @@ var sources = [
 						default: throw Error();
 					}
 				},
-				default_value: 0
+				default_value: -10
 			},
 			{key:'strecke_kurzn', info:true},
 			{key:'gleisanzahl', info:true,
