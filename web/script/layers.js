@@ -62,11 +62,6 @@ function Layers(map, layerWrapper) {
 		window.legendDiv.innerHTML += html;
     }
 	
-	function makeId(strIn) {
-		return strIn.replace(/[^\x00-\x7F]/g, "").split(' ')[0];
-	}
-		
-	
 	function showLegend(layer) {
 		var myLayer = layer;
 		if(window.legend === undefined) {
@@ -75,13 +70,13 @@ function Layers(map, layerWrapper) {
 			window.legend.onAdd = function (map) {
 				window.legendDiv = L.DomUtil.create('div', 'info legend');
 			    
-				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, makeId(myLayer.nameProp));
+				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, myLayer.order);
 			    return window.legendDiv;
 			};
 			window.legend.addTo(map);
 		}
 		else {
-			drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, makeId(myLayer.nameProp));
+			drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, myLayer.order);
 		}
 		
 	}
@@ -117,7 +112,7 @@ function Layers(map, layerWrapper) {
 	}
 
 	function removeLayer(layer) {
-		$('#legend-' + makeId(layer.nameProp)).remove();
+		$('#legend-' + layer.order).remove();
 		if (layer.node) layer.node.removeClass('active');
 		layer.active = false;
 		if (layer.canvas) {
