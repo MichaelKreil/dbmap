@@ -116,6 +116,10 @@ function Layers(map, layerWrapper) {
 
 function getColorScheme(data) {
 	var type = typeof data.values[0];
+	var useDefault = false;
+	var defaultColor = '#aaa';
+	var legend = [];
+
 	switch (type) {
 		case 'number':
 			var min =  1e100;
@@ -123,23 +127,34 @@ function getColorScheme(data) {
 			data.values.forEach(function (value) {
 				if (min > value) min = value;
 				if (max < value) max = value;
+				if (value == data.default_value) useDefault = true;
 			})
 			var a = max - min;
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
 			var getColor = function (value) {
-				if (value == data.default_value) return '#aaa';
+				if (value == data.default_value) return defaultColor;
 				value = (value-min)/a;
 				return bezInterpolator(value).hex();
 			}
+			legend = [
+				{value:min, label:'Min: '+min},
+				{value:max, label:'Max: '+max}
+			]
 		break;
 		case 'string':
 			var keys = {};
-			data.values.forEach(function (value) { keys[value] = true; })
+			data.values.forEach(function (value) {
+				if (!keys[value]) {
+					keys[value] = true;
+					if (value != data.default_value) legend.push({ value:value, label:value })
+				} 
+				if (value == data.default_value) useDefault = true;
+			})
 			Object.keys(keys).forEach(function (key, index) {keys[key] = index });
 			var count = Object.keys(keys).length-1;;
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
 			var getColor = function (value) {
-				if (value == data.default_value) return '#aaa';
+				if (value == data.default_value) return defaultColor;
 				return bezInterpolator(keys[value]/count).hex();
 			}
 		break;
@@ -148,10 +163,18 @@ function getColorScheme(data) {
 	}
 
 	var cache = {};
+	function calc (value) {
+		if (!cache[value]) cache[value] = getColor(value);
+		return cache[value]
+	}
+	
+	if (useDefault) legend.unshift({value:data.default_value, label:data.default_value})
+	legend.forEach(function (entry) {
+		entry.color = calc(entry.value);
+	})
+
 	return {
-		calc:function (value) {
-			if (!cache[value]) cache[value] = getColor(value);
-			return cache[value]
-		}
+		calc:calc,
+		legend:legend
 	}
 }
