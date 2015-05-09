@@ -5,11 +5,10 @@ function Layers(map, layerWrapper) {
 	me.setData = function(data) {
 		layers = data;
 		geoGroups = {};
-		var emptyLayers = [];
 		layers.forEach(function (layer) {
 			if (!geoGroups[layer.geo]) {
 				var emptyLayer = {geo:layer.geo,property:false,nameGeo:layer.nameGeo,nameProp:'-'};
-				emptyLayers.push(emptyLayer);
+				layers.push(emptyLayer);
 
 				geoGroups[layer.geo] = {
 					filename: 'data/geo/'+layer.geo+'.json',
@@ -25,8 +24,14 @@ function Layers(map, layerWrapper) {
 		})
 
 		geoGroups = Object.keys(geoGroups).map(function (key) { return geoGroups[key] });
-		emptyLayers.forEach(function (layer) { layers.unshift(layer) });
-		layers.forEach(function (layer, index) { layer.index = index });
+		geoGroups.forEach(function (geoGroup, index1) {
+			geoGroup.layers.forEach(function (layer, index2) {
+				layer.order = index1*100 + index2/100;
+			})
+		});
+		layers.sort(function (a,b) {
+			return a.order - b.order;
+		})
 
 		drawLayerList();
 		addLayer(geoGroups[0].layers[0]);
@@ -50,6 +55,13 @@ function Layers(map, layerWrapper) {
 			loadLayer(layer, function () {
 				layer.canvas = new CanvasLayer(map, layer.geo.data, layer.data);
 				map.addLayer(layer.canvas.layer);
+				//for (var i = layers.length-1; i >= 0; i--) {
+				for (var i = 0; i < layers.length; i++) {
+					layer = layers[i];
+					if (layer.canvas && layer.canvas.layer) {
+						layer.canvas.layer.bringToFront();
+					}
+				}
 			})
 		})
 	}
@@ -57,7 +69,10 @@ function Layers(map, layerWrapper) {
 	function removeLayer(layer) {
 		if (layer.node) layer.node.removeClass('active');
 		layer.active = false;
-		if (layer.canvas) map.removeLayer(layer.canvas.layer);
+		if (layer.canvas) {
+			map.removeLayer(layer.canvas.layer);
+			layer.canvas.layer = false;
+		}
 	}
 
 	function drawLayerList() {
