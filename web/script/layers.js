@@ -95,12 +95,12 @@ function Layers(map, layerWrapper) {
 
 	function loadLayer(layer, callback) {
 		if (layer.data) return setTimeout(finish,0);
-		$.getJSON(layer.filename, function (values) {
-			var calcColor = getColorScheme(values);
-			layer.data = values.map(function (value) {
+		$.getJSON(layer.filename, function (data) {
+			var colorScheme = getColorScheme(data);
+			layer.data = data.values.map(function (value) {
 				return {
 					value:value,
-					color:calcColor(value)
+					color:colorScheme.calc(value)
 				}
 			});
 			finish();
@@ -114,32 +114,44 @@ function Layers(map, layerWrapper) {
 	return me;
 }
 
-function getColorScheme(values) {
-	var type = typeof values[0];
+function getColorScheme(data) {
+	var type = typeof data.values[0];
 	switch (type) {
 		case 'number':
 			var min =  1e100;
 			var max = -1e100;
-			values.forEach(function (value) {
+			data.values.forEach(function (value) {
 				if (min > value) min = value;
 				if (max < value) max = value;
 			})
 			var a = max - min;
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
-			return function (value) {
+			var getColor = function (value) {
+				if (value == data.default_value) return '#aaa';
 				value = (value-min)/a;
 				return bezInterpolator(value).hex();
 			}
+		break;
 		case 'string':
 			var keys = {};
-			values.forEach(function (value) { keys[value] = true; })
+			data.values.forEach(function (value) { keys[value] = true; })
 			Object.keys(keys).forEach(function (key, index) {keys[key] = index });
 			var count = Object.keys(keys).length-1;;
 			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green', 'blue']);
-			return function (value) {
+			var getColor = function (value) {
+				if (value == data.default_value) return '#aaa';
 				return bezInterpolator(keys[value]/count).hex();
 			}
+		break;
 		default:
 			throw new Error('Unknown type "'+type+'"');
+	}
+
+	var cache = {};
+	return {
+		calc:function (value) {
+			if (!cache[value]) cache[value] = getColor(value);
+			return cache[value]
+		}
 	}
 }

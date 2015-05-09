@@ -44,7 +44,6 @@ module.exports = function (entry) {
 			})
 		}
 
-		//console.log(values);
 		values = values.map(function (value) {
 			if (value === null) {
 				if (property.default_value === undefined) throw new Error('"'+property.key+'" needs a default_value')
@@ -52,6 +51,11 @@ module.exports = function (entry) {
 			}
 			return value;
 		})
+
+		values = {
+			default_value:property.default_value,
+			values:values
+		}
 
 		var propfilename = entry.name+'_'+(property.name || property.key);
 		fs.writeFileSync(path.resolve(c.data_folder, 'property', propfilename+'.json'), JSON.stringify(values), 'utf8');

@@ -29,6 +29,10 @@ html, body{
 	float: right;
 }
 
+.badge {
+	background-color: #ddd;
+}
+
 .icon-spin {
 	-webkit-transform-origin: 50% 49%;
 	    -ms-transform-origin: 50% 49%;
