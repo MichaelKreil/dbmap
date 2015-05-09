@@ -107,3 +107,11 @@ html, body{
   margin-right: 8px;
   opacity: 0.7;
 }
+
+.legend-part {
+	margin-bottom: 15px;
+}
+
+.legend-part:last-child {
+	margin-bottom: 0px;
+}

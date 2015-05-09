@@ -51,7 +51,7 @@ function Layers(map, layerWrapper) {
 		}
 		$(".legend").show();
 		var html = '';
-		html += '<div id="legend-' + id + '"><h4>' + myName + '</h4>';
+		html += '<div class="legend-part" id="legend-' + id + '"><h4>' + myName + '</h4>';
 		for (var i = 0; i < colorScheme.legend.length; i++) {
 			html +=
 	    	'<div><i style="background:' + colorScheme.legend[i].color + '"></i> ' +
@@ -64,20 +64,19 @@ function Layers(map, layerWrapper) {
 	
 	function showLegend(layer) {
 		var myLayer = layer;
-		console.log(myLayer);
 		if(window.legend === undefined) {
 			window.legend = L.control({position: 'bottomright'});
 			
 			window.legend.onAdd = function (map) {
 				window.legendDiv = L.DomUtil.create('div', 'info legend');
 			    
-				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' ' + myLayer.nameProp, myLayer.nameProp);
+				drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, myLayer.nameProp);
 			    return window.legendDiv;
 			};
 			window.legend.addTo(map);
 		}
 		else {
-			drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' ' + myLayer.nameProp, myLayer.nameProp);
+			drawColorScheme(myLayer.colorScheme, myLayer.nameGeo + ' → ' + myLayer.nameProp, myLayer.nameProp);
 		}
 		
 	}
