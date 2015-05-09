@@ -1,0 +1,56 @@
+html, body{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#map, #layers {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+#map {
+	right: 300px;
+}
+
+#layers {
+	left: auto;
+	width: 300px;
+}
+
+.panel-title > .badge {
+	float: right;
+}
+
+.icon-spin {
+	-webkit-transform-origin: 50% 49%;
+	    -ms-transform-origin: 50% 49%;
+	        transform-origin: 50% 49%;
+	-webkit-animation: spin2 0.7s infinite linear;
+	   -moz-animation: spin 0.7s infinite linear;
+	     -o-animation: spin 0.7s infinite linear;
+	        animation: spin 0.7s infinite linear;
+	display: inline-block;
+	font-family: 'Glyphicons Halflings';
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
