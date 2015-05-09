@@ -1,6 +1,8 @@
 function Layers(map, layerWrapper) {
 	var me = {};
 	var layers, geoGroups;
+	var legend;
+
 
 	me.setData = function(data) {
 		layers = data;
@@ -21,6 +23,40 @@ function Layers(map, layerWrapper) {
 		drawLayerList();
 		addLayer(layers[0]);
 	}
+	
+	function showLegend(layer) {
+		var myLayer = layer;
+		if(window.legend === undefined) {
+			window.legend = L.control({position: 'bottomright'});
+			
+			window.legend.onAdd = function (map) {
+				console.log(myLayer);
+				window.legendDiv = L.DomUtil.create('div', 'info legend');
+			    // loop through our density intervals and generate a label with a colored square for each interval
+			    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
+			        window.legendDiv.innerHTML +=
+			            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
+			            myLayer.colorScheme.legend[i].label + '</div>';
+			    }
+
+			    return window.legendDiv;
+			};
+			
+			window.legend.addTo(map);
+			
+		}
+		else {
+			window.legendDiv.innerHTML = '';
+	    for (var i = 0; i < myLayer.colorScheme.legend.length; i++) {
+	        window.legendDiv.innerHTML +=
+	            '<div><i style="background:' + myLayer.colorScheme.legend[i].color + '"></i> ' +
+	            myLayer.colorScheme.legend[i].label + '</div>';
+	    }
+			
+		}
+		
+	}
+	
 
 	function toggleLayer(layer) {
 		if (layer.active) {
@@ -40,6 +76,8 @@ function Layers(map, layerWrapper) {
 			loadLayer(layer, function () {
 				layer.canvas = new CanvasLayer(map, layer.geo.data, layer.data);
 				map.addLayer(layer.canvas.layer);
+				showLegend(layer);
+				
 			})
 		})
 	}
@@ -92,11 +130,13 @@ function Layers(map, layerWrapper) {
 			callback();
 		}
 	}
-
+	
+	
 	function loadLayer(layer, callback) {
 		if (layer.data) return setTimeout(finish,0);
 		$.getJSON(layer.filename, function (data) {
 			var colorScheme = getColorScheme(data);
+			layer.colorScheme = colorScheme;
 			layer.data = data.values.map(function (value) {
 				return {
 					value:value,
