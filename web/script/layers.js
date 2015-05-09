@@ -53,8 +53,9 @@ function Layers(map, layerWrapper) {
 		var html = '';
 		html += '<div class="legend-part" id="legend-' + id + '"><h4>' + myName + '</h4>';
 		for (var i = 0; i < colorScheme.legend.length; i++) {
+			var colorRgb = 'rgb(' + colorScheme.legend[i].color.join() + ')';
 			html +=
-	    	'<div><i style="background:' + colorScheme.legend[i].color + '"></i> ' +
+	    	'<div><i style="background:' + colorRgb + '"></i> ' +
 			colorScheme.legend[i].label + '</div>';
 		}
 		html += '</div>';
