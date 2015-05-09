@@ -1,6 +1,4 @@
 function CanvasLayer (map, geoData, values) {
-	var me = {};
-
 	var tiles = {};
 
 	var canvasLayer = L.tileLayer.canvas();
@@ -99,7 +97,9 @@ function CanvasLayer (map, geoData, values) {
 		}
 	}
 
-	canvasLayer.addTo(map);
+	return {
+		layer:canvasLayer
+	}
 }
 
 
