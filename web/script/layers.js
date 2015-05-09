@@ -92,8 +92,14 @@ function Layers(map, layerWrapper) {
 
 	function loadLayer(layer, callback) {
 		if (layer.data) return finish();
-		$.getJSON(layer.filename, function (result) {
-			layer.data = result;
+		$.getJSON(layer.filename, function (values) {
+			var calcColor = getColorScheme(values);
+			layer.data = values.map(function (value) {
+				return {
+					value:value,
+					color:calcColor(value)
+				}
+			});
 			finish();
 		})
 		function finish() {
@@ -103,4 +109,25 @@ function Layers(map, layerWrapper) {
 	}
 
 	return me;
+}
+
+function getColorScheme(values) {
+	var type = typeof values[0];
+	switch (type) {
+		case 'number':
+			var min =  1e100;
+			var max = -1e100;
+			values.forEach(function (value) {
+				if (min > value) min = value;
+				if (max < value) max = value;
+			})
+			var a = max - min;
+			var bezInterpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
+			return function (value) {
+				value = (value-min)/a;
+				return bezInterpolator(value).hex();
+			}
+		default:
+			throw new Error('Unknown type "'+type+'"');
+	}
 }
