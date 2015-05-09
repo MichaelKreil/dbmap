@@ -178,10 +178,17 @@ function getColorScheme(data) {
 				value = (value-min)/a;
 				return bezInterpolator(value).hex();
 			}
-			legend = [
-				{value:min, label:'Min: '+min},
-				{value:max, label:'Max: '+max}
-			]
+			
+			legend = [{value:min, label:min+' (min.)'}];
+			var numSteps = 5;
+			var stepSize = (max - min) / 5
+			for(var i=0; i < numSteps - 1; i++) {
+				var value = min + (stepSize * (i+1));
+				legend.push({value: value, label: value});
+			}
+			
+			legend.push({value:max, label:max + ' (max.)'});
+
 		break;
 		case 'string':
 			var keys = {};
