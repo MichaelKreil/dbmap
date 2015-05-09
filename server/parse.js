@@ -8,27 +8,27 @@ var sources = [
 		properties: [
 			{key:'mifcode', ignore:true},
 			{key:'strecke_nr', info:true},
-			{key:'richtung', info:true, parser:parseFloat},
+			{key:'richtung', info:true},
 			{key:'laenge', info:true},
-			{key:'von_km', info:true},
-			{key:'bis_km', info:true},
+			{key:'von_km', info:true, ignore:true },
+			{key:'bis_km', info:true, ignore:true },
 			{key:'elektrifizierung', info:true},
 			{key:'bahnnutzung', info:true},
 			{key:'geschwindigkeit', info:true,
 				parser:function (value) {
 					switch(value) {
-						case 'bis 50 km/h': return 50;
-						case 'ab 50 bis 100 km/h': return 100;
-						case 'ab 100 bis 120 km/h': return 120;
-						case 'ab 120 bis 160 km/h': return 160;
-						case 'ab 160 bis 200 km/h': return 200;
-						case 'ab 200 bis 250 km/h': return 250;
-						case 'ab 250 bis 280 km/h': return 280;
-						case 'ab 280 bis 300 km/h': return 300;
+						case         'bis 50 km/h': return 'bis  50 km/h';
+						case  'ab 50 bis 100 km/h': return 'bis 100 km/h';
+						case 'ab 100 bis 120 km/h': return 'bis 120 km/h';
+						case 'ab 120 bis 160 km/h': return 'bis 160 km/h';
+						case 'ab 160 bis 200 km/h': return 'bis 200 km/h';
+						case 'ab 200 bis 250 km/h': return 'bis 250 km/h';
+						case 'ab 250 bis 280 km/h': return 'bis 280 km/h';
+						case 'ab 280 bis 300 km/h': return 'bis 300 km/h';
 						default: throw Error();
 					}
 				},
-				default_value: -10
+				default_value: 'unbekannt'
 			},
 			{key:'strecke_kurzn', info:true},
 			{key:'gleisanzahl', info:true,
@@ -69,7 +69,15 @@ var sources = [
 		filename: 'map/out-cells.geojson',
 		properties: [
 			{key:'mcc', ignore:true, info:true },
-			{key:'mnc', info:true, parser:function(v) { return (' '+v).substr(v.length-1) }},
+			{key:'mnc', info:true, parser:function(v) { 
+				switch(v) {
+					case "1": return "Telekom"; break;
+					case "2": return "Vodafone"; break;
+					case "3": return "E-Plus"; break;
+					case "7": return "O2"; break;
+					default: return "Sonstiger"; break;
+				}
+			}, default_value:'Sonstiger'},
 			{key:'dist', info:true, parser:parseFloat},
 			{key:'range', info:true, parser:parseFloat},
 			{key:'rssi', info:true, parser:parseFloat},
@@ -86,7 +94,7 @@ var sources = [
 			{key:'streckennummer', info:true, ignore:true},
 			{key:'km', ignore:true, info:true},
 			{key:'bezeichnung', ignore:true, info:true},
-			{key:'art', info:true},
+			{key:'art', info:true, parser:function(v) { return v.split(' ').shift().trim() } },
 			{key:'kuerzel', ignore:true, info:true}
 		]
 	},
@@ -103,7 +111,7 @@ var sources = [
 			{key:"RBEHOERDE", ignore:true},
 			{key:"FESTSDATUM", ignore:true},
 			{key:"TBEHOERDE", ignore:true},
-			{key:"ERFGRDL"},
+			{key:"ERFGRDL", parser:function(v) { return v.split('(').shift().trim() } },
 			{key:"FLAECHE"}
 		]
 	}/*,
