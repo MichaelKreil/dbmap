@@ -60,6 +60,19 @@ function Layers(map, layerWrapper) {
 		}
 		html += '</div>';
 		window.legendDiv.innerHTML += html;
+		$('#legend-' + id).mouseenter(function(ev) {
+			window.map.dragging.disable();
+			window.map.touchZoom.disable();
+			window.map.doubleClickZoom.disable();
+			window.map.scrollWheelZoom.disable();
+		});
+		$('#legend-' + id).mouseleave(function(ev) {
+			window.map.dragging.enable();
+			window.map.touchZoom.enable();
+			window.map.doubleClickZoom.enable();
+			window.map.scrollWheelZoom.enable();
+		});
+		
     }
 	
 	function showLegend(layer) {

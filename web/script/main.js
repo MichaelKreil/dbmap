@@ -1,6 +1,7 @@
 $(function () {
-
+	
 	var map = L.map('map', {zoomAnimation: false, maxZoom: 22});
+	window.map = map;
 	map.setView([51,9], 6);
 
 	// add an OpenStreetMap tile layer
