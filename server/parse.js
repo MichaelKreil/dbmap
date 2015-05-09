@@ -55,13 +55,21 @@ var parseGeoJSON = require('./lib/parse_geojson.js');
 var result = {};
 
 sources.forEach(function (entry) {
+	var _result = {};
 	switch (entry.type) {
 		case 'geojson':
-			parseGeoJSON(entry)
+			_result = parseGeoJSON(entry)
 		break;
 		default:
 			throw new Error('Unknown type')
 	}
+	Object.keys(_result).forEach(function (key) {
+		result[key] = _result[key];
+	})
+})
+
+result = Object.keys(result).map(function (key) {
+	return result[key];
 })
 
 fs.writeFileSync(path.resolve(c.data_folder, 'data.json'), JSON.stringify(result), 'utf8')
