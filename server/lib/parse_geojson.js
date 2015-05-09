@@ -25,9 +25,9 @@ module.exports = function (entry) {
 	});
 	
 	var geofilename = entry.name;
-	fs.writeFileSync(path.resolve(c.data_folder, 'geo', geofilename+'.json'), JSON.stringify(geo), 'utf8');
-
+	
 	var result = {};
+	var radius = []
 	entry.properties.forEach(function (property) {
 		var values = properties[property.key];
 		if (!values) throw Error('"'+property.key+'" does not exist');
@@ -51,6 +51,7 @@ module.exports = function (entry) {
 			}
 			return value;
 		})
+		if (property.key == entry.radiusField) radius = values;
 
 		values = {
 			default_value:property.default_value,
@@ -67,6 +68,16 @@ module.exports = function (entry) {
 			nameProp: property.title || property.name || property.key
 		}
 	})
+
+	if (entry.subtype == 'circle') {
+		geo.forEach(function(point, index) {
+			if (point.t != 'p') return;
+			point.t = 'c';
+			point.c.push(radius[index]);
+		})
+	}
+	
+	fs.writeFileSync(path.resolve(c.data_folder, 'geo', geofilename+'.json'), JSON.stringify(geo), 'utf8');
 
 	Object.keys(properties).forEach(function (key) {
 		var values = properties[key];
