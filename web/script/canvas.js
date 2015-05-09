@@ -11,6 +11,11 @@ function CanvasLayer (map, geoData, values) {
 				entry.geometry = diffDecoding(entry.c).map(parseCoordinate);
 				entry.box = calcBoundingbox(entry.geometry);
 			break;
+			case 'pg':
+				entry.type = 'polygon';
+				entry.geometry = diffDecoding(entry.c).map(parseCoordinate);
+				entry.box = calcBoundingbox(entry.geometry);
+			break;
 			case 'p':
 				entry.type = 'point';
 				entry.geometry = parseCoordinate(entry.c);
@@ -106,6 +111,20 @@ function CanvasLayer (map, geoData, values) {
 						ctx.lineWidth = 1.5;
 						ctx.strokeStyle = 'rgb('+values[index].color.join(',')+')';
 						ctx.stroke();
+					break;
+					case 'polygon':
+						ctx.beginPath();
+						obj.geometry.forEach(function (point, index) {
+							var x = (point[0] - x0)*scale;
+							var y = (point[1] - y0)*scale;
+							if (index == 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+						})
+						/*
+						var x = (obj.geometry[0][0] - x0)*scale;
+						var y = (obj.geometry[0][1] - y0)*scale;
+						ctx.lineTo(x,y)*/
+						ctx.fillStyle = 'rgba('+values[index].color.join(',')+',0.3)';
+						ctx.fill();
 					break;
 					case 'point':
 						ctx.beginPath();

@@ -71,9 +71,18 @@ module.exports = function (entry) {
 		}
 	})
 	
-	//var fs.readFileSync()
-	geo = geo.map(function (entry, index) {
-		entry = {};
+	var geoMatch = fs.readFileSync(path.resolve(c.source_folder, entry.match.map), 'utf8');
+	geoMatch = JSON.parse(geoMatch).features;
+	var fields = entry.match.fields;
+	var geoLookup = {};
+	geoMatch.forEach(function (entry) {
+		var key = entry.properties[fields.track[0]];
+		if (!geoLookup[key]) geoLookup[key] = [];
+		geoLookup[key].push()
+	})
+
+	geo = geo.map(function (o, index) {
+		geoMatch.forEach
 	})
 
 	fs.writeFileSync(path.resolve(c.data_folder, 'geo', geofilename+'.json'), JSON.stringify(geo), 'utf8');

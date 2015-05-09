@@ -93,6 +93,8 @@ module.exports = function (entry) {
 function parseGeometry(geometry) {
 	switch (geometry.type) {
 		case 'LineString': return { t:'l', c:diffEncoding(geometry.coordinates.map(parseCoordinate)) };
+		case 'Polygon': return { t:'pg', c:diffEncoding(geometry.coordinates[0].map(parseCoordinate)) };
+		case 'MultiPolygon': return { t:'pg', c:diffEncoding(geometry.coordinates[0][0].map(parseCoordinate)) };
 		case 'Point': return { t:'p', c:parseCoordinate(geometry.coordinates) };
 		default: throw new Error(geometry.type);
 	}
